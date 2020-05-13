@@ -1,29 +1,31 @@
 import React, { Component } from 'react';
 
 export default class ErrorBoundary extends Component {
-  state = { error: null, errorInfo: null };
-
-  componentDidCatch(error, errorInfo) {
+  constructor(props) {
+    super(props);
+    this.state = {
+      hasError: false,
+      error: null,
+      info: null,
+    };
+  }
+  componentDidCatch(error, info) {
     this.setState({
+      hasError: true,
       error: error,
-      errorInfo: errorInfo,
+      info: info,
     });
   }
-
   render() {
-    if (this.state.errorInfo) {
+    if (this.state.hasError) {
       return (
         <div>
-          <h2>Something went wrong.</h2>
-          <details style={{ whiteSpace: 'pre-wrap' }}>
-            {this.state.error && this.state.error.toString()}
-            <br />
-            {this.state.errorInfo.componentStack}
-          </details>
+          <h1>Oops, something went wrong :(</h1>
+          <p>The error: {this.state.error.toString()}</p>
+          <p>Where it occured: {this.state.info.componentStack}</p>
         </div>
       );
     }
-
     return this.props.children;
   }
 }
